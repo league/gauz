@@ -1,3 +1,4 @@
+from genshi.input import XML
 from genshi.template import NewTextTemplate
 import os
 
@@ -26,7 +27,39 @@ class AssetBase(object):
             os.makedirs(d)
 
 class MarkupAsset(AssetBase):
-    pass
+    def read(self):
+        self.mtime = os.path.getmtime(self.source)
+        self.config.log.action('READ', self.source)
+        inf = open(self.source)
+        buf = inf.read()
+        inf.close()
+        xml = XML(buf)
+        self.changed = False
+        self.noticeChange('title', self.config.extractTitle(xml))
+        self.noticeChange('tags', self.config.extractTags(xml))
+        self.noticeChange('date', self.config.extractDate(xml))
+        return self.changed
+
+    def noticeChange(self, attr, value):
+        try:
+            if getattr(self, attr) != value:
+                self.recordChange(attr, value)
+        except AttributeError:
+            self.recordChange(attr, value)
+
+    def recordChange(self, attr, value):
+        setattr(self, attr, value)
+        self.changed = True
+
+    def generate(self):
+        tmpl = self.config.loader.load(self.source)
+        self.maybeMakeParentDir(self.target)
+        self.config.log.action('WRITE', self.target)
+        outf = open(self.target, 'w')
+        stream = tmpl.generate(self.config.makeContext(self))
+        print >>outf, stream.render('xhtml')
+        outf.close()
+
 
 class TextAsset(AssetBase):
     def generate(self):

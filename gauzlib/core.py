@@ -79,7 +79,7 @@ class Workload:
 
 
 def main(CF = Config):
-    cf = CF('../www')
+    cf = CF('../www', ['../include'])
     wl = Workload(cf, '.')
     while 1:
         cf.wait()

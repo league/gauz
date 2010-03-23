@@ -1,2 +1,4 @@
 *.pyc
 sample/www/*.css
+sample/www/*.html
+sample/www/*/*.html
