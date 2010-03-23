@@ -1,7 +1,9 @@
-<html xmlns:py="http://genshi.edgewall.org/">
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
   <head />
   <body py:with="bar=42">
+    <xi:include href="../notice.html" />
     <p>Hello, ${bar*2}</p>
-    <p>${1+2*3}</p>
+    <p>${5+2*3}</p>
   </body>
 </html>

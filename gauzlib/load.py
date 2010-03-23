@@ -1,4 +1,5 @@
 from genshi.template import TemplateLoader
+import os
 
 class DependencyTracker(TemplateLoader):
     def __init__(self, search_path):

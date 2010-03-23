@@ -27,7 +27,7 @@ class Workload:
         for f in self.filesChanged:
             self.fileMap[f].generate()
             self.fileMap[f].visited = True
-        #self.checkIncludes()
+        self.checkIncludes()
         if self.metaChanged:
             for a in self.fileMap.itervalues():
                 if not a.visited:
