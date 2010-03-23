@@ -4,6 +4,7 @@ http://www.freecsstemplates.org
 Released for free under a Creative Commons Attribution 2.5 License
 */
 
+{% with color='#696969' %}
 body {
 	margin: 0px;
 	padding: 0;
@@ -11,7 +12,7 @@ body {
 	text-align: justify;
 	font-family:  Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	color: #696969;
+	color: ${color};
 }
 
 h1, h2, h3 {
@@ -36,7 +37,7 @@ ul {
 
 a {
 	text-decoration: none;
-	color: #696969;
+	color: ${color};
 }
 
 a:hover {
@@ -421,3 +422,4 @@ img.right {
 
 #footer .copyright {
 }
+{% end %}

@@ -1,6 +1,7 @@
 from gauzlib.assets import *
 from gauzlib.log import SimpleLogger
 from genshi.template.base import Context
+from time import sleep
 import re
 
 class Config(object):
@@ -10,6 +11,7 @@ class Config(object):
     textFileRegex = re.compile(r'\.css$')
 
     log = SimpleLogger()
+    waitIntervalSec = 2
 
     def __init__(self, outputDir):
         self.outputDir = outputDir
@@ -39,3 +41,7 @@ class Config(object):
 
     def makeContext(self, asset):
         return Context(page = asset)
+
+    def wait(self):
+        self.log.wait()
+        sleep(self.waitIntervalSec)
