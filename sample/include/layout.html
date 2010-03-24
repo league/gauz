@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+    Design by Free CSS Templates
+    http://www.freecsstemplates.org
+    Released for free under a Creative Commons Attribution 2.5 License
+
+    Name       : Hanging
+    Description: A three-column, fixed-width blog design.
+    Version    : 1.0
+    Released   : 20091030
+
+  -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Hanging by Free CSS Templates</title>
+    <meta name="keywords" content="" />
+    <meta name="Hanging" content="" />
+    <link href="${page.top}default.css" rel="stylesheet" type="text/css" media="screen" />
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="header-wrapper">
+        <div id="header">
+          <div id="logo">
+            <h1><a href="#"><span>Hanging</span></a></h1>
+            <p>Designed By Free CSS Templates</p>
+          </div> <!-- logo -->
+        </div>   <!-- header -->
+      </div>     <!-- header-wrapper -->
+      <div id="menu-wrapper">
+        <div id="menu">
+          <ul id="main"
+              py:with="section = page_section().next()[1]
+                       if defined('page_section') else ''">
+            <li py:def="nav_item(id, href, text)"
+                py:attrs="{'class': 'current_page_item'} if section==id else {}">
+              <a href="${page.top}${href}">${text}</a>
+            </li>
+            ${nav_item('HOME',    'index.html',       'Homepage')}
+            ${nav_item('SERVICE', 'service.html',     'Services')}
+            ${nav_item('ABOUT',   'about/index.html', 'About us')}
+            ${nav_item('CONTACT', 'contact.html',     'Contact us')}
+          </ul>
+        </div> <!-- menu -->
+      </div>   <!-- menu-wrapper -->
+      <div id="page">
+        <div id="page-bgtop">
+          <div id="page-bgbtm">
+            <div id="sidebar1" class="sidebar">
+              <ul>
+                <li>
+                  <h2>Recent Posts</h2>
+                  <ul>
+                    <li><a href="#">Aliquam libero</a></li>
+                    <li><a href="#">Consectetuer adipiscing elit</a></li>
+                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                    <li><a href="#">Suspendisse iaculis mauris</a></li>
+                    <li><a href="#">Proin gravida orci porttitor</a></li>
+                    <li><a href="#">Aliquam libero</a></li>
+                    <li><a href="#">Consectetuer adipiscing elit</a></li>
+                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                    <li><a href="#">Suspendisse iaculis mauris</a></li>
+                    <li><a href="#">Proin gravida orci porttitor</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <h2>Archives</h2>
+                  <ul>
+                    <li><a href="#">September</a> (23)</li>
+                    <li><a href="#">August</a> (31)</li>
+                    <li><a href="#">July</a> (31)</li>
+                    <li><a href="#">June</a> (30)</li>
+                    <li><a href="#">May</a> (31)</li>
+                  </ul>
+                </li>
+              </ul>
+            </div> <!-- sidebar1 -->
+            <div id="content">
+              <content />
+            </div> <!-- content -->
+            <div id="sidebar2" class="sidebar">
+              <ul>
+                <li>
+                  <form id="searchform" method="get" action="#">
+                    <div>
+                      <h2>Site Search</h2>
+                      <input type="text" name="s" id="s" size="15" value="" />
+                    </div>
+                  </form>
+                </li>
+                <li>
+                  <h2>Categories</h2>
+                  <ul>
+                    <li><a href="#">Aliquam libero</a></li>
+                    <li><a href="#">Consectetuer adipiscing elit</a></li>
+                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                    <li><a href="#">Suspendisse iaculis mauris</a></li>
+                    <li><a href="#">Urnanet non molestie semper</a></li>
+                    <li><a href="#">Proin gravida orci porttitor</a></li>
+                    <li><a href="#">Aliquam libero</a></li>
+                    <li><a href="#">Consectetuer adipiscing elit</a></li>
+                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                    <li><a href="#">Urnanet non molestie semper</a></li>
+                    <li><a href="#">Proin gravida orci porttitor</a></li>
+                    <li><a href="#">Aliquam libero</a></li>
+                    <li><a href="#">Consectetuer adipiscing elit</a></li>
+                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div> <!-- sidebar2 -->
+            <div style="clear: both;">&nbsp;</div>
+          </div> <!-- page-bgbtm -->
+        </div>   <!-- page-bgtop -->
+      </div>     <!-- page -->
+    </div>       <!-- wrapper -->
+  </body>
+</html>

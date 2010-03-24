@@ -82,8 +82,11 @@ def main(CF = Config):
     cf = CF('../www', ['../include'])
     wl = Workload(cf, '.')
     while 1:
-        cf.wait()
         try:
+            cf.wait()
             wl.update()
+        except KeyboardInterrupt:
+            print "\nBye!"
+            return
         except:
             traceback.print_exc()
