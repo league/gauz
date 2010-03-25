@@ -35,9 +35,9 @@ class MarkupAsset(AssetBase):
         inf.close()
         self.xml = XML(buf)
         self.changed = False
-        self.noticeChange('title', self.config.extractTitle(self.xml))
-        self.noticeChange('tags', self.config.extractTags(self.xml))
-        self.noticeChange('date', self.config.extractDate(self.xml))
+        self.noticeChange('title', self.config.extractTitle(self))
+        self.noticeChange('tags', self.config.extractTags(self))
+        self.noticeChange('date', self.config.extractDate(self))
         return self.changed
 
     def noticeChange(self, attr, value):

@@ -4,12 +4,11 @@
 
   <xi:include href="single-post.html" />
 
-  <py:def function="page_title">Quisque faucibus semper</py:def>
-
-  <py:def function="page_tags">amet, habitant, facilisis, tristique,
-    ornare, morbi</py:def>
-
-  <py:def function="page_date">2010-03-18</py:def>
+  <head py:replace="None">
+    <title>Quisque faucibus semper</title>
+    <meta name="keywords" content="amet, habitant, facilisis, tristique,
+                                   ornare, morbi" />
+  </head>
 
   <py:match path="post">
     <p>Maecenas quis placerat elit. Nullam vitae ipsum

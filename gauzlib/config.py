@@ -8,33 +8,38 @@ import datetime
 import re
 
 class Config(object):
-    ignoreDirRegex = re.compile(r'^[_\.]')
-    ignoreFileRegex = re.compile(r'(^|/)(_|\.#|#)|~$')
-    markupFileRegex = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
-    textFileRegex = re.compile(r'\.css$')
-    iso8601Regex = re.compile(r'(\d{4})[-/\.](\d{2})[-/\.](\d{2})')
-    tagSepRegex = re.compile(r'[,;:\s]\s*')
+    reIgnoredir = re.compile(r'^[_\.]')
+    reIgnorefile = re.compile(r'(^|/)(_|\.#|#)|~$')
+    reIso8601 = re.compile(r'(\d{4})[-/\.](\d{2})[-/\.](\d{2})')
+    reMarkupfile = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
+    reTagsep = re.compile(r'[,;:\s]\s*')
+    reTextfile = re.compile(r'\.css$')
+
+    xpTitle = 'title/text()'
+    xpTags = 'meta[@name="keywords"]/@content'
+    xpDate = 'meta[@name="date"]/@content'
 
     log = SimpleLogger()
     gauz = GauzUtils()
     waitIntervalSec = 2
+    namespaces = {'py': 'http://genshi.edgewall.org/',
+                  'xi': 'http://www.w3.org/2001/XInclude'}
 
     def __init__(self, outputDir, includeDirs):
         self.outputDir = outputDir
-        self.loader = DependencyTracker([os.path.realpath(d)
-                                         for d in ['.'] + includeDirs])
+        self.loader = DependencyTracker(includeDirs)
 
     def pruneDirs(self, parent, dirs):
         for d in reversed(dirs): # backwards so we can safely remove
-            if self.ignoreDirRegex.search(d):
+            if self.reIgnoredir.search(d):
                 dirs.remove(d)
 
     def makeAssetFor(self, pathname):
-        if self.ignoreFileRegex.search(pathname):
+        if self.reIgnorefile.search(pathname):
             return None
-        elif self.markupFileRegex.search(pathname):
+        elif self.reMarkupfile.search(pathname):
             return MarkupAsset(pathname, self)
-        elif self.textFileRegex.search(pathname):
+        elif self.reTextfile.search(pathname):
             return TextAsset(pathname, self)
         else:
             return LinkAsset(pathname, self)
@@ -54,27 +59,24 @@ class Config(object):
         self.log.wait()
         sleep(self.waitIntervalSec)
 
-    def extractTitle(self, xml):
-        return self.extractFunctionBody('page_title', xml)
+    def extractText(self, xml, xpath):
+        stream = xml.select(xpath, namespaces = self.namespaces)
+        return unicode(stream.render('text'), 'utf-8')
 
-    def extractTags(self, xml):
-        tags = self.extractFunctionBody('page_tags', xml)
-        tags = self.tagSepRegex.split(tags) if tags else []
+    def extractTitle(self, asset):
+        return self.extractText(asset.xml, self.xpTitle)
+
+    def extractTags(self, asset):
+        tags = self.extractText(asset.xml, self.xpTags)
+        tags = self.reTagsep.split(tags) if tags else []
         tags.sort()
         return tags
 
-    def extractDate(self, xml):
-        ymd = self.extractFunctionBody('page_date', xml)
-        mo = self.iso8601Regex.search(ymd)
+    def extractDate(self, asset):
+        ymd = self.extractText(asset.xml, self.xpDate) or asset.source
+        mo = self.reIso8601.search(ymd)
         if mo:
             return datetime.date(int(mo.group(1)), int(mo.group(2)),
                                  int(mo.group(3)))
         else:
             return None
-
-    def extractFunctionBody(self, func, xml):
-        py = {'py': 'http://genshi.edgewall.org/'}
-        stream = xml.select('py:def[@function="%s"]/text()' % func,
-                            namespaces = py)
-        return unicode(stream.render('text'), 'utf-8')
-
