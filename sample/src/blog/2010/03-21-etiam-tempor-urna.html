@@ -1,0 +1,42 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <xi:include href="single-post.html" />
+
+  <head py:replace="None">
+    <title>Etiam tempor urna</title>
+    <meta name="keywords" content="egestas, facilisis, netus" />
+  </head>
+
+  <py:match path="post">
+    <p>Fusce tellus nisl, euismod vel mollis non, volutpat at
+    odio. Sed aliquet, purus sed posuere dictum, sapien enim commodo
+    arcu, sit amet convallis neque nisi non nibh. Cras nunc lectus,
+    porta ac suscipit eget, rhoncus convallis lectus. Etiam sem
+    mauris, rutrum nec bibendum ac, eleifend ut lacus. Nullam nec
+    tellus sed tellus semper suscipit in sit amet lectus. Aliquam
+    sollicitudin pharetra felis sit amet convallis. Duis velit massa,
+    egestas vulputate pharetra ut, fringilla ut nunc. Aenean imperdiet
+    scelerisque tempor. Aliquam erat volutpat. Proin vel dignissim
+    felis. Praesent cursus eleifend iaculis. Mauris sit amet velit
+    magna. Vestibulum lobortis aliquet mi ac blandit. Morbi ut quam
+    quis felis consectetur tristique id eget dolor.</p>
+
+    <p>Etiam faucibus augue a erat hendrerit viverra. Cras facilisis,
+    felis et semper ultricies, justo massa eleifend libero, id
+    fringilla orci risus eu augue. Cras faucibus hendrerit lacus, ac
+    eleifend magna varius quis. Nullam tristique, ipsum eu consectetur
+    rutrum, arcu leo aliquet nisi, sed volutpat nisi lorem ut
+    ante. Curabitur cursus porta mi, at mattis elit tempor id. Integer
+    turpis tortor, sagittis eget semper eget, pulvinar nec
+    magna. Fusce vitae leo a quam tincidunt aliquet. Donec suscipit,
+    purus et fermentum vestibulum, ligula nisl tristique felis, vitae
+    dictum elit odio non lorem. In ullamcorper aliquet
+    venenatis. Aliquam placerat justo vel magna sodales sit amet
+    elementum ipsum pulvinar. Sed mattis mattis risus quis
+    tincidunt. Integer sed felis eros.</p>
+  </py:match>
+
+  <xi:include href="layout.html" />
+</html>

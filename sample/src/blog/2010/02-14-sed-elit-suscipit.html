@@ -1,0 +1,50 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <xi:include href="single-post.html" />
+
+  <head py:replace="None">
+    <title>Sed elit Suscipit</title>
+    <meta name="keywords" content="egestas, facilisis, libero, netus,
+                                   phasellus" />
+  </head>
+
+  <py:match path="post">
+    <p>Duis metus nulla, tempor non suscipit vitae, semper ac
+    neque. Nulla lorem massa, hendrerit eu dictum id, suscipit sed
+    dui. Integer et arcu mauris. Vivamus aliquam ornare tortor ac
+    tristique. Duis est sem, bibendum ut accumsan non, imperdiet nec
+    augue. Pellentesque sodales lacinia dolor vitae rutrum. Etiam
+    vehicula interdum justo sit amet sodales. Lorem ipsum dolor sit
+    amet, consectetur adipiscing elit. Vivamus nec consectetur
+    lorem. Mauris adipiscing fringilla accumsan. Aliquam erat
+    volutpat. Vivamus eget porta velit.</p>
+
+    <p>Integer dapibus facilisis cursus. Sed id ultrices nulla. Nunc
+    metus velit, bibendum et gravida vitae, consectetur condimentum
+    nisl. Praesent vel orci at augue egestas tincidunt. Nulla
+    tincidunt dui vel lorem dignissim nec suscipit lacus
+    tristique. Nunc sodales ornare tellus quis blandit. Vivamus nec
+    felis a magna accumsan fringilla ac faucibus neque. Morbi varius,
+    turpis sit amet dignissim hendrerit, turpis nunc pharetra augue,
+    quis euismod elit nibh auctor lectus. Nunc at condimentum est. Sed
+    interdum auctor nunc at aliquet.</p>
+
+    <p>Etiam id urna quis ante dictum sodales et quis ligula. Mauris
+    ultricies, nisl in viverra molestie, lectus eros lobortis diam,
+    quis viverra ante nisl a elit. Sed est leo, faucibus nec tincidunt
+    quis, varius viverra magna. In hac habitasse platea
+    dictumst. Donec elementum diam in nunc rutrum congue a a
+    diam. Nunc et dictum sapien. Donec sed quam justo. Maecenas sit
+    amet magna ac est aliquet imperdiet at quis justo. Aenean laoreet
+    nibh lorem. Morbi fringilla, dui at laoreet cursus, orci lectus
+    ultricies justo, quis aliquet urna orci ac tortor. Nam commodo,
+    diam ut sodales vestibulum, mi ligula congue sem, sed malesuada
+    odio diam gravida dui. Nulla consequat feugiat est, sed ultrices
+    nisi dictum in. Suspendisse potenti. Praesent diam sem, lacinia et
+    semper eu, auctor id leo. Nullam venenatis gravida venenatis.</p>
+  </py:match>
+
+  <xi:include href="layout.html" />
+</html>

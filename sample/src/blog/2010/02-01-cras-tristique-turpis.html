@@ -1,0 +1,43 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <xi:include href="single-post.html" />
+
+  <head py:replace="None">
+    <title>Cras tristique turpis</title>
+    <meta name="keywords" content="amet, bibendum, libero, sagittis" />
+  </head>
+
+  <py:match path="post">
+    <p>Nullam venenatis volutpat volutpat. Donec varius, elit a
+      sodales sollicitudin, lectus arcu commodo quam, vel imperdiet elit
+      metus eget arcu. Donec nisi massa, elementum eget dictum suscipit,
+      tempor vitae ipsum. Mauris consectetur urna vel quam elementum
+      semper. Nulla sit amet justo ac massa egestas mattis ac a
+      diam. Proin ultrices est vel nulla consequat vitae elementum arcu
+      commodo. Vestibulum volutpat, dolor eleifend adipiscing cursus,
+      elit nisi luctus justo, ac suscipit quam augue id eros. Etiam quis
+      sem et risus venenatis pharetra quis a leo. Donec aliquam, leo id
+      blandit congue, sapien tortor blandit libero, sed rhoncus diam
+      metus vitae elit. Vivamus urna tellus, tincidunt at condimentum
+      et, sagittis quis diam. Integer ut sapien ac mi interdum
+      suscipit. Cras eu mi non diam adipiscing mattis fermentum in
+      sapien.</p>
+
+    <p>Mauris pulvinar tempor urna malesuada rutrum. Integer vulputate
+      adipiscing suscipit. Etiam volutpat sodales mauris vitae
+      rhoncus. Class aptent taciti sociosqu ad litora torquent per
+      conubia nostra, per inceptos himenaeos. Class aptent taciti
+      sociosqu ad litora torquent per conubia nostra, per inceptos
+      himenaeos. Integer a sem nulla, at vehicula nibh. Quisque aliquet
+      metus eu magna volutpat cursus. Ut commodo dapibus feugiat. Nulla
+      dignissim eleifend sem id tristique. Nam hendrerit tristique nibh
+      in ultrices. Nulla rhoncus, odio in interdum porta, diam odio
+      scelerisque odio, sed venenatis sem justo sed magna. Pellentesque
+      magna magna, commodo sit amet feugiat mollis, cursus id
+      tellus.</p>
+  </py:match>
+
+  <xi:include href="layout.html" />
+</html>
