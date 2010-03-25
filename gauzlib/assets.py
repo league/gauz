@@ -7,6 +7,9 @@ class AssetBase(object):
         self.source = filename
         self.config = config
         self.visited = False
+        self.title = ''
+        self.tags = []
+        self.date = None
         self.read()
         config.finalizeAsset(self)
 

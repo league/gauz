@@ -10,6 +10,7 @@
     Released   : 20091030
 
   -->
+<?python from datetime import date ?>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/">
   <head>
@@ -66,11 +67,11 @@
                 <li>
                   <h2>Archives</h2>
                   <ul>
-                    <li><a href="#">September</a> (23)</li>
-                    <li><a href="#">August</a> (31)</li>
-                    <li><a href="#">July</a> (31)</li>
-                    <li><a href="#">June</a> (30)</li>
-                    <li><a href="#">May</a> (31)</li>
+                    <li py:for="y,m in ord['months']">
+                      <a href="${'%sblog/%d/%02d.html' % (page.top, y, m)}">
+                        ${date(y,m,1).strftime("%B %Y")}</a>
+                      (${len(by['month'][(y,m)])})
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -89,22 +90,12 @@
                   </form>
                 </li>
                 <li>
-                  <h2>Categories</h2>
+                  <h2>Tags</h2>
                   <ul>
-                    <li><a href="#">Aliquam libero</a></li>
-                    <li><a href="#">Consectetuer adipiscing elit</a></li>
-                    <li><a href="#">Metus aliquam pellentesque</a></li>
-                    <li><a href="#">Suspendisse iaculis mauris</a></li>
-                    <li><a href="#">Urnanet non molestie semper</a></li>
-                    <li><a href="#">Proin gravida orci porttitor</a></li>
-                    <li><a href="#">Aliquam libero</a></li>
-                    <li><a href="#">Consectetuer adipiscing elit</a></li>
-                    <li><a href="#">Metus aliquam pellentesque</a></li>
-                    <li><a href="#">Urnanet non molestie semper</a></li>
-                    <li><a href="#">Proin gravida orci porttitor</a></li>
-                    <li><a href="#">Aliquam libero</a></li>
-                    <li><a href="#">Consectetuer adipiscing elit</a></li>
-                    <li><a href="#">Metus aliquam pellentesque</a></li>
+                    <li py:for="t in ord['tags']">
+                      <a href="${page.top}blog/tag/${t}.html">${t}</a>
+                      (${len(by['tag'][t])})
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -116,7 +107,6 @@
     </div>       <!-- wrapper -->
     <div id="footer-wrapper">
       <div id="footer">
-        <?python from datetime import date ?>
         <p class="copyright">&copy;&nbsp;&nbsp;2009 –
           ${date.today().strftime("%Y")} All Rights
         Reserved &nbsp;&bull;&nbsp; Design

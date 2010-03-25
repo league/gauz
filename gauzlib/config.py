@@ -19,12 +19,13 @@ def doubly_link(ls):
         prev = d
 
 class Config(object):
-    reIgnoredir = re.compile(r'^[_\.]')
-    reIgnorefile = re.compile(r'(^|/)(_|\.#|#)|~$')
+    reIgnoreDir = re.compile(r'^[_\.]')
+    reIgnoreFile = re.compile(r'(^|/)(_|\.#|#)|~$')
     reIso8601 = re.compile(r'(\d{4})[-/\.](\d{2})[-/\.](\d{2})')
-    reMarkupfile = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
-    reTagsep = re.compile(r'[,;:\s]\s*')
-    reTextfile = re.compile(r'\.css$')
+    reMarkupFile = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
+    reTagSep = re.compile(r'[,;:\s]\s*')
+    reTextFile = re.compile(r'\.css$')
+    reWebPage = re.compile(r'\.(html|xhtml|htm)$')
 
     xpDate = 'meta[@name="date"]/@content'
     xpTags = 'meta[@name="keywords"]/@content'
@@ -42,15 +43,15 @@ class Config(object):
 
     def pruneDirs(self, parent, dirs):
         for d in reversed(dirs): # backwards so we can safely remove
-            if self.reIgnoredir.search(d):
+            if self.reIgnoreDir.search(d):
                 dirs.remove(d)
 
     def makeAssetFor(self, pathname):
-        if self.reIgnorefile.search(pathname):
+        if self.reIgnoreFile.search(pathname):
             return None
-        elif self.reMarkupfile.search(pathname):
+        elif self.reMarkupFile.search(pathname):
             return MarkupAsset(pathname, self)
-        elif self.reTextfile.search(pathname):
+        elif self.reTextFile.search(pathname):
             return TextAsset(pathname, self)
         else:
             return LinkAsset(pathname, self)
@@ -60,16 +61,12 @@ class Config(object):
         a.top = ''.join(['../' for x in a.source.split('/')[1:]])
         a.href = a.source
 
-    def summarize(self, fileMap):
-        self.posts = []
-        for k, a in fileMap.iteritems():
-            if self.isPost(a):
-                self.posts.append(a)
-        self.posts.sort(key = lambda p: p.date, reverse=True)
-        doubly_link(self.posts)
-
     def makeContext(self, asset):
-        return Context(page=asset, gauz=self.gauz, posts=self.posts)
+        return Context(page = asset, gauz = self.gauz, ord = self.ord,
+                       posts = self.posts, pages = self.pages,
+                       by = {'year': self.by_year,
+                             'month': self.by_month,
+                             'tag': self.by_tag})
 
     def wait(self):
         self.log.wait()
@@ -84,7 +81,7 @@ class Config(object):
 
     def extractTags(self, asset):
         tags = self.extractText(asset.xml, self.xpTags)
-        tags = self.reTagsep.split(tags) if tags else []
+        tags = self.reTagSep.split(tags) if tags else []
         tags.sort()
         return tags
 
@@ -97,6 +94,38 @@ class Config(object):
         else:
             return None
 
-    def isPost(self, asset):
-        return bool(asset.date) if hasattr(asset, 'date') else False
+    def summarize(self, fileMap):
+        self.posts = []         # post assets, in reverse chron
+        self.pages = []         # page assets, ordered by title/source
+        self.by_year = {}       # yyyy -> set(source)
+        self.by_month = {}      # (yyyy,mm) -> set(source)
+        self.by_tag = {}        # t -> set(source)
+        for k, a in fileMap.iteritems():
+            if self.isPost(a):
+                self.posts.append(a)
+            elif self.isPage(a):
+                self.pages.append(a)
+            if a.date:
+                if a.date.year not in self.by_year:
+                    self.by_year[a.date.year] = set()
+                self.by_year[a.date.year].add(a.source)
+                if (a.date.year, a.date.month) not in self.by_month:
+                    self.by_month[(a.date.year, a.date.month)] = set()
+                self.by_month[(a.date.year, a.date.month)].add(a.source)
+            for t in a.tags:
+                if t not in self.by_tag:
+                    self.by_tag[t] = set()
+                self.by_tag[t].add(a.source)
+        self.posts.sort(key = lambda p: p.date, reverse=True)
+        self.pages.sort(key = lambda p: p.title or p.source)
+        doubly_link(self.posts)
+        doubly_link(self.pages)
+        self.ord = {'tags': sorted(self.by_tag.keys()),
+                    'years': sorted(self.by_year.keys(), reverse=True),
+                    'months': sorted(self.by_month.keys(), reverse=True)}
 
+    def isPost(self, asset):
+        return bool(asset.date)
+
+    def isPage(self, asset):
+        return self.reWebPage.search(asset.source)
