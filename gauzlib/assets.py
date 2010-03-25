@@ -33,11 +33,11 @@ class MarkupAsset(AssetBase):
         inf = open(self.source)
         buf = inf.read()
         inf.close()
-        xml = XML(buf)
+        self.xml = XML(buf)
         self.changed = False
-        self.noticeChange('title', self.config.extractTitle(xml))
-        self.noticeChange('tags', self.config.extractTags(xml))
-        self.noticeChange('date', self.config.extractDate(xml))
+        self.noticeChange('title', self.config.extractTitle(self.xml))
+        self.noticeChange('tags', self.config.extractTags(self.xml))
+        self.noticeChange('date', self.config.extractDate(self.xml))
         return self.changed
 
     def noticeChange(self, attr, value):
@@ -52,7 +52,7 @@ class MarkupAsset(AssetBase):
         self.changed = True
 
     def generate(self):
-        tmpl = self.config.loader.load(self.source)
+        tmpl = self.config.loader.start(self)
         self.maybeMakeParentDir(self.target)
         self.config.log.action('WRITE', self.target)
         outf = open(self.target, 'w')

@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      py:strip="">
+
+  <py:match path="content">
+    <div class="post">
+      <h1 class="title">${page.title}</h1>
+      <p class="byline"><em>Posted on
+          ${page.date.strftime("%B %d, %Y")}
+      </em></p>
+      <div class="entry">
+        <post />
+      </div> <!-- entry -->
+      <p py:if="page.tags"><em>Tagged
+        <py:for each="t in page.tags">
+          <a href="${page.top}blog/tag/${t}.html">${t}</a>${
+          ', ' if t != page.tags[-1] else ''}
+        </py:for>
+      </em></p>
+    </div>   <!-- post -->
+  </py:match>
+
+</html>

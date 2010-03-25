@@ -1,8 +1,10 @@
 from gauzlib.assets import *
-from gauzlib.log import SimpleLogger
 from gauzlib.load import DependencyTracker
+from gauzlib.log import SimpleLogger
+from gauzlib.util import GauzUtils
 from genshi.template.base import Context
 from time import sleep
+import datetime
 import re
 
 class Config(object):
@@ -11,8 +13,10 @@ class Config(object):
     markupFileRegex = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
     textFileRegex = re.compile(r'\.css$')
     iso8601Regex = re.compile(r'(\d{4})[-/\.](\d{2})[-/\.](\d{2})')
+    tagSepRegex = re.compile(r'[,;:\s]\s*')
 
     log = SimpleLogger()
+    gauz = GauzUtils()
     waitIntervalSec = 2
 
     def __init__(self, outputDir, includeDirs):
@@ -44,7 +48,7 @@ class Config(object):
         pass
 
     def makeContext(self, asset):
-        return Context(page = asset)
+        return Context(page=asset, gauz=self.gauz)
 
     def wait(self):
         self.log.wait()
@@ -55,7 +59,7 @@ class Config(object):
 
     def extractTags(self, xml):
         tags = self.extractFunctionBody('page_tags', xml)
-        tags = tagSepRegex.split(tags) if tags else []
+        tags = self.tagSepRegex.split(tags) if tags else []
         tags.sort()
         return tags
 

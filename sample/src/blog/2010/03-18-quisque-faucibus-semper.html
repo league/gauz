@@ -1,0 +1,40 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <xi:include href="single-post.html" />
+
+  <py:def function="page_title">Quisque faucibus semper</py:def>
+
+  <py:def function="page_tags">amet, habitant, facilisis, tristique,
+    ornare, morbi</py:def>
+
+  <py:def function="page_date">2010-03-18</py:def>
+
+  <py:match path="post">
+    <p>Maecenas quis placerat elit. Nullam vitae ipsum
+    risus. Pellentesque non accumsan mauris. Aliquam placerat molestie
+    magna id porta. Quisque non justo tellus. Donec non turpis turpis,
+    eget pellentesque eros. Nunc vitae lacus sit amet ante hendrerit
+    sollicitudin nec vel nisl. Phasellus sagittis metus vitae augue
+    euismod pellentesque. Nulla facilisi. Maecenas ac nulla
+    dolor. Aenean ullamcorper ipsum eros, a blandit augue. Curabitur
+    diam ante, vulputate ac fringilla ac, tincidunt vel ante. Proin eu
+    velit a lacus molestie tempor non et orci. Sed ultricies arcu a
+    purus rutrum tincidunt. Ut malesuada facilisis pharetra. Integer
+    semper, eros sed tristique congue, nisl tortor molestie elit,
+    vitae tempus turpis leo vel sapien. Curabitur et tortor dolor, at
+    rutrum dolor. Phasellus laoreet lobortis hendrerit.</p>
+
+    <p>Aenean dolor urna, vulputate vitae facilisis ac, suscipit eu
+    diam. Fusce venenatis fermentum pretium. Vestibulum id leo vitae
+    diam interdum rhoncus at ac metus. Donec quis urna semper odio
+    feugiat aliquet. Phasellus tortor felis, pharetra at fermentum at,
+    vulputate quis urna. Fusce laoreet ipsum a dolor consequat
+    facilisis. Sed faucibus tincidunt lectus sit amet accumsan. Fusce
+    ut tincidunt orci. Nullam gravida tristique rhoncus. Suspendisse
+    potenti. </p>
+  </py:match>
+
+  <xi:include href="layout.html" />
+</html>

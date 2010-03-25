@@ -17,7 +17,8 @@
     <title>Hanging by Free CSS Templates</title>
     <meta name="keywords" content="" />
     <meta name="Hanging" content="" />
-    <link href="${page.top}default.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="${page.top}default.css" rel="stylesheet"
+          type="text/css" media="screen" />
   </head>
   <body>
     <div id="wrapper">
@@ -32,13 +33,15 @@
       <div id="menu-wrapper">
         <div id="menu">
           <ul id="main"
-              py:with="section = page_section().next()[1]
-                       if defined('page_section') else ''">
+              py:with="section = gauz.markupToString(
+                       value_of('page_section', ''))">
             <li py:def="nav_item(id, href, text)"
-                py:attrs="{'class': 'current_page_item'} if section==id else {}">
+                py:attrs="{'class': 'current_page_item'}
+                          if section==id else {}">
               <a href="${page.top}${href}">${text}</a>
             </li>
             ${nav_item('HOME',    'index.html',       'Homepage')}
+            ${nav_item('BLOG',    'blog/',            'Blog')}
             ${nav_item('SERVICE', 'service.html',     'Services')}
             ${nav_item('ABOUT',   'about/index.html', 'About us')}
             ${nav_item('CONTACT', 'contact.html',     'Contact us')}
