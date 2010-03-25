@@ -7,6 +7,17 @@ from time import sleep
 import datetime
 import re
 
+def doubly_link(ls):
+    # We assume reverse-chron (in order for the next/prev to make sense).
+    next = None
+    for d in ls:
+        d.next = next
+        next = d
+    prev = None
+    for d in reversed(ls):
+        d.prev = prev
+        prev = d
+
 class Config(object):
     reIgnoredir = re.compile(r'^[_\.]')
     reIgnorefile = re.compile(r'(^|/)(_|\.#|#)|~$')
@@ -15,9 +26,9 @@ class Config(object):
     reTagsep = re.compile(r'[,;:\s]\s*')
     reTextfile = re.compile(r'\.css$')
 
-    xpTitle = 'title/text()'
-    xpTags = 'meta[@name="keywords"]/@content'
     xpDate = 'meta[@name="date"]/@content'
+    xpTags = 'meta[@name="keywords"]/@content'
+    xpTitle = 'title/text()'
 
     log = SimpleLogger()
     gauz = GauzUtils()
@@ -47,13 +58,18 @@ class Config(object):
     def finalizeAsset(self, a):
         a.target = os.path.join(self.outputDir, a.source)
         a.top = ''.join(['../' for x in a.source.split('/')[1:]])
-        a.href = a.top + a.source
+        a.href = a.source
 
     def summarize(self, fileMap):
-        pass
+        self.posts = []
+        for k, a in fileMap.iteritems():
+            if self.isPost(a):
+                self.posts.append(a)
+        self.posts.sort(key = lambda p: p.date, reverse=True)
+        doubly_link(self.posts)
 
     def makeContext(self, asset):
-        return Context(page=asset, gauz=self.gauz)
+        return Context(page=asset, gauz=self.gauz, posts=self.posts)
 
     def wait(self):
         self.log.wait()
@@ -80,3 +96,7 @@ class Config(object):
                                  int(mo.group(3)))
         else:
             return None
+
+    def isPost(self, asset):
+        return bool(asset.date) if hasattr(asset, 'date') else False
+

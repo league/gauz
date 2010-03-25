@@ -56,16 +56,11 @@
                 <li>
                   <h2>Recent Posts</h2>
                   <ul>
-                    <li><a href="#">Aliquam libero</a></li>
-                    <li><a href="#">Consectetuer adipiscing elit</a></li>
-                    <li><a href="#">Metus aliquam pellentesque</a></li>
-                    <li><a href="#">Suspendisse iaculis mauris</a></li>
-                    <li><a href="#">Proin gravida orci porttitor</a></li>
-                    <li><a href="#">Aliquam libero</a></li>
-                    <li><a href="#">Consectetuer adipiscing elit</a></li>
-                    <li><a href="#">Metus aliquam pellentesque</a></li>
-                    <li><a href="#">Suspendisse iaculis mauris</a></li>
-                    <li><a href="#">Proin gravida orci porttitor</a></li>
+                    <li py:for="p in posts[:5]">
+                      <a href="${page.top}${p.href}">
+                        ${p.date.strftime("%m/%d")}
+                        ${p.title}</a>
+                    </li>
                   </ul>
                 </li>
                 <li>

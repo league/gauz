@@ -6,6 +6,8 @@
   <py:def function="page_section">BLOG</py:def>
 
   <py:match path="content">
+    <p><a style="float: left" href="${page.top}${page.prev.href}" py:if="page.prev">« previous</a>
+      <a style="float: right" href="${page.top}${page.next.href}" py:if="page.next">» next</a></p>
     <div class="post">
       <h1 class="title">${page.title}</h1>
       <p class="byline"><em>Posted on
