@@ -1,10 +1,71 @@
 <html xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude"
       py:strip="">
-
   <py:def function="page_section">ABOUT</py:def>
-
   <py:match path="content">
+  <?python
+     from pygments import highlight
+     from pygments.lexers import get_lexer_by_name
+     from pygments.formatters import HtmlFormatter
+     ?>
+  <style>
+    .highlight pre { font-family: "Monaco", monospace;
+      line-height: 3ex;
+    }
+    ${HtmlFormatter().get_style_defs('.highlight')}
+  </style>
+  <py:match path="pygment">
+    ${Markup(highlight(select('text()').render('text'),
+    get_lexer_by_name(select('@lang').render('text')),
+    HtmlFormatter()))}
+  </py:match>
+
+    <div class="post">
+      <h1 class="title">Source code examples</h1>
+      <h2>Python</h2>
+      <pygment lang='python'>
+print "Hello World"
+def my_func():
+    print "Yow!"
+      </pygment>
+      <h2>C++</h2>
+      <pygment lang='cpp'>
+// Steganographic decoder, requires GraphicsMagick
+#include &lt;Magick++.h&gt;
+#include &lt;iostream&gt;
+#include &lt;cassert&gt;
+
+using std::cout;
+using std::string;
+using namespace Magick;
+
+Quantum revealDisguisedColor(Quantum q)
+{
+  // just keep lowest 2 bits, then amplify by 2^6
+  return (q &amp; 3) &lt;&lt; 6;
+}
+      </pygment>
+      <h2>Scheme</h2>
+      <pygment lang='scheme'>
+;; Encapsulate a typical "for i = j to n" loop control structure.
+(define (for-loop from to body)
+  (when (&lt; from to)
+    (body from)
+    (for-loop (+ from 1) to body)))
+
+;; Collect the results of (each), called n times.
+(define (repeat n each)
+  (if (= n 0) null
+      (cons (each) (repeat (- n 1) each))))
+
+;; Build a vector of 'n' elements, initializing each element according
+;; to the results of the characteristic function 'f'.
+(define (vector-tabulate n each)
+  (let ((v (make-vector n)))
+    (for-loop 0 n (lambda (i) (vector-set! v i (each i))))
+    v))
+      </pygment>
+    </div>
     Hello world.
   </py:match>
 
