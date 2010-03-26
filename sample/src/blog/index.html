@@ -1,0 +1,27 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <py:def function="page_section">BLOG</py:def>
+
+  <py:match path="content">
+    <div class="post" py:for="p in posts[:3]">
+      <h1 class="title"><a href="${page.top}${p.href}">${p.title}</a></h1>
+      <p class="byline"><em>${p.date.strftime("%B %d, %Y")}</em></p>
+      <div class="entry">
+        ${p.content}
+      </div>
+    </div>
+    <div class="post">
+      <h1 class="title">Older posts</h1>
+      <ul>
+        <li py:for="p in posts[3:6]">
+          <a href="${page.top}${p.href}">
+            ${p.date.strftime("%m/%d")} ${p.title}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </py:match>
+  <xi:include href="layout.html" />
+</html>

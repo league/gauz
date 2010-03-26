@@ -27,6 +27,7 @@ class Config(object):
     reTextFile = re.compile(r'\.css$')
     reWebPage = re.compile(r'\.(html|xhtml|htm)$')
 
+    xpContent = 'py:match[@path="post"]'
     xpDate = 'meta[@name="date"]/@content'
     xpTags = 'meta[@name="keywords"]/@content'
     xpTitle = 'title/text()'
@@ -78,6 +79,10 @@ class Config(object):
 
     def extractTitle(self, asset):
         return self.extractText(asset.xml, self.xpTitle)
+
+    def extractContent(self, asset):
+        stream = asset.xml.select(self.xpContent, namespaces = self.namespaces)
+        return list(stream)
 
     def extractTags(self, asset):
         tags = self.extractText(asset.xml, self.xpTags)

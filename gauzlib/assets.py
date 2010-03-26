@@ -10,6 +10,7 @@ class AssetBase(object):
         self.title = ''
         self.tags = []
         self.date = None
+        self.content = ''
         self.read()
         config.finalizeAsset(self)
 
@@ -41,6 +42,7 @@ class MarkupAsset(AssetBase):
         self.noticeChange('title', self.config.extractTitle(self))
         self.noticeChange('tags', self.config.extractTags(self))
         self.noticeChange('date', self.config.extractDate(self))
+        self.content = self.config.extractContent(self)
         return self.changed
 
     def noticeChange(self, attr, value):
