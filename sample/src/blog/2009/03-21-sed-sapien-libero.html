@@ -1,0 +1,44 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <xi:include href="single-post.html" />
+
+  <head py:replace="None">
+    <title>Sed sapien libero</title>
+    <meta name="keywords" content="dapibus, libero, morbi" />
+  </head>
+
+  <py:match path="post">
+    <p>Vivamus ac ligula ut lacus ultrices tristique. In hac habitasse
+    platea dictumst. Nullam nec tortor eu lorem posuere faucibus eu ut
+    dui. Pellentesque habitant morbi tristique senectus et netus et
+    malesuada fames ac turpis egestas. Morbi facilisis ante eu enim
+    vestibulum nec ultricies justo bibendum. Suspendisse potenti. Sed
+    sapien libero, euismod nec vulputate vel, viverra venenatis
+    leo. Sed imperdiet nisl at erat blandit nec aliquet diam
+    interdum. Phasellus dignissim sem sit amet ipsum molestie
+    pharetra. Nam venenatis, sem varius venenatis pulvinar, lectus
+    massa scelerisque velit, in elementum elit diam et leo. Sed id
+    sapien massa. Duis commodo posuere viverra. Suspendisse malesuada
+    bibendum dolor, et sollicitudin urna ornare et. Nullam et
+    elementum dolor. Sed ac convallis enim. Curabitur augue enim,
+    sodales non rhoncus at, volutpat quis augue. Maecenas posuere,
+    enim a eleifend fermentum, erat nisl feugiat enim, quis elementum
+    enim elit sed nunc. Duis ut vulputate nibh.</p>
+
+    <p>Quisque egestas dolor sit amet orci mollis congue. Sed non
+    magna tincidunt nulla ultricies semper sit amet ultricies
+    ipsum. Proin sit amet nulla viverra massa volutpat adipiscing sit
+    amet id leo. Fusce vel tellus lacus, ac semper nunc. Nullam
+    lacinia auctor enim posuere tincidunt. In feugiat malesuada massa
+    at tincidunt. Vestibulum viverra iaculis mi non sodales. Ut
+    egestas nisl at metus rutrum ut sodales ante blandit. Aliquam erat
+    volutpat. Pellentesque tempor egestas orci vitae dictum. Nullam
+    pellentesque facilisis leo ut bibendum. Maecenas nec diam
+    orci. Sed ultricies lorem sed lorem tristique blandit id eu
+    ligula. Praesent at leo ipsum, non laoreet lectus.</p>
+  </py:match>
+
+  <xi:include href="layout.html" />
+</html>

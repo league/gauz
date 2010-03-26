@@ -1,0 +1,26 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+  <py:def function="page_section">BLOG</py:def>
+
+  <py:match path="content">
+    <div class="post">
+      <h1 class="title">Archive of tag ‘amet’</h1>
+      <ul>
+        <li py:for="p in gauz.filter(posts, tag='amet')">
+          <a href="${page.top}${p.href}">${p.date} ${p.title}</a>
+        </li>
+      </ul>
+    </div>
+    <div class="post">
+      <h1 class="title">Combining feb2010 with libero</h1>
+      <ul py:with="ids = (by['month'][(2010,2)] &amp; by['tag']['libero'])">
+        <li py:for="p in gauz.filter(posts, ids=ids)">
+          ${p.date} ${p.title} ${str(p.tags)}
+        </li>
+      </ul>
+    </div>
+  </py:match>
+  <xi:include href="layout.html" />
+</html>
