@@ -4,8 +4,36 @@
 
   <py:def function="page_section">SERVICE</py:def>
 
-  <py:match path="content">
-    Services page.
+  <py:match path="content" py:with="t1='dapibus'; t2='libero'">
+    <h1 class="title">Services page</h1>
+    <p>Here's an example of using the sets available from gauz...</p>
+    <h2>Things tagged ‘${t1}’ AND ‘${t2}’</h2>
+    <ol py:with="ids = by['tag'][t1] &amp; by['tag'][t2]">
+      <li py:for="p in gauz.filter(posts, ids=ids)">
+        <a href="${page.top}${p.href}">${p.date} ${p.title}</a>
+      </li>
+    </ol>
+    <h2>Things tagged ‘${t1}’ OR ‘${t2}’</h2>
+    <ol py:with="ids = by['tag'][t1] | by['tag'][t2]">
+      <li py:for="p in gauz.filter(posts, ids=ids)">
+        <a href="${page.top}${p.href}">${p.date} ${p.title}</a> —
+        ${'both' if t1 in p.tags and t2 in p.tags else t1 if t1 in p.tags else t2 if t2 in p.tags else 'ERROR'}
+      </li>
+    </ol>
+    <h2>Complete calendar</h2>
+    <p py:for="y in ord['years']"><b>${y}:</b>
+      <py:for each="m in range(1,13)">
+        <py:with vars="mn = date(y,m,1).strftime('%b');
+                       hr='%sblog/%d/%02d.html' % (page.top, y, m)">
+          <py:choose test="">
+            <py:when test="(y,m) in by['month']">
+              <b><a href="${hr}" title="${len(by['month'][(y,m)])}">${mn}</a></b>
+            </py:when>
+            <py:otherwise>${mn}</py:otherwise>
+          </py:choose>
+        </py:with>
+      </py:for>
+    </p>
   </py:match>
 
   <xi:include href="layout.html" />

@@ -6,18 +6,10 @@
 
   <py:match path="content">
     <div class="post">
-      <h1 class="title">Archive of tag ‘amet’</h1>
+      <h1 class="title">Archive of tag ‘${page.tag}’</h1>
       <ul>
-        <li py:for="p in gauz.filter(posts, tag='amet')">
+        <li py:for="p in gauz.filter(posts, tag=page.tag)">
           <a href="${page.top}${p.href}">${p.date} ${p.title}</a>
-        </li>
-      </ul>
-    </div>
-    <div class="post">
-      <h1 class="title">Combining feb2010 with libero</h1>
-      <ul py:with="ids = (by['month'][(2010,2)] &amp; by['tag']['libero'])">
-        <li py:for="p in gauz.filter(posts, ids=ids)">
-          ${p.date} ${p.title} ${str(p.tags)}
         </li>
       </ul>
     </div>

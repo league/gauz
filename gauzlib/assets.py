@@ -1,16 +1,17 @@
 from genshi.input import XML
 from genshi.template import NewTextTemplate
+import copy
 import os
 
 class AssetBase(object):
     def __init__(self, filename, config):
-        self.source = filename
         self.config = config
-        self.visited = False
-        self.title = ''
-        self.tags = []
-        self.date = None
         self.content = ''
+        self.date = None
+        self.source = filename
+        self.tags = []
+        self.title = ''
+        self.visited = False
         self.read()
         config.finalizeAsset(self)
 
@@ -79,3 +80,48 @@ class TextAsset(AssetBase):
 
 class LinkAsset(AssetBase):
     pass
+
+class CompositeAsset(AssetBase):
+    # has one source but many targets
+    def __init__(self, orig):
+        self.orig = orig
+        self.config = orig.config
+
+    def __getattr__(self, name):
+        return getattr(self.orig, name)
+
+    def read(self):
+        return self.orig.read()
+
+    def generate(self):
+        self.copy = copy.copy(self.orig)
+        self.expandTags(self.orig.href)
+
+    def expandTags(self, href):
+        if href.find('@TAG') >= 0:
+            for t in self.config.ord['tags']:
+                self.copy.tag = t
+                self.expandDates(href.replace('@TAG', t))
+        else:
+            self.expandDates(href)
+
+    def expandDates(self, href):
+        if href.find('@MM') >= 0: # assumes MM also uses YYYY
+            for y,m in self.config.ord['months']:
+                self.copy.yyyy = y
+                self.copy.mm = m
+                yy = str(y)
+                mm = '%02d' % m
+                h = href.replace('@YYYY', yy).replace('@MM', mm)
+                self.genInstance(h)
+        elif href.find('@YYYY') >= 0:
+            for y in self.config.ord['years']:
+                self.copy.var['yyyy'] = y
+                self.genInstance(href.replace('@YYYY', y))
+        else:
+            self.genInstance(href)
+
+    def genInstance(self, href):
+        self.copy.href = href
+        self.copy.target = os.path.join(self.config.outputDir, href)
+        self.copy.generate()

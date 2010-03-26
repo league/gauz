@@ -50,17 +50,20 @@ class Config(object):
     def makeAssetFor(self, pathname):
         if self.reIgnoreFile.search(pathname):
             return None
-        elif self.reMarkupFile.search(pathname):
-            return MarkupAsset(pathname, self)
+        if self.reMarkupFile.search(pathname):
+            a = MarkupAsset(pathname, self)
         elif self.reTextFile.search(pathname):
-            return TextAsset(pathname, self)
+            a = TextAsset(pathname, self)
         else:
-            return LinkAsset(pathname, self)
+            a = LinkAsset(pathname, self)
+        if pathname.find('@') >= 0:
+            a = CompositeAsset(a)
+        return a
 
     def finalizeAsset(self, a):
-        a.target = os.path.join(self.outputDir, a.source)
-        a.top = ''.join(['../' for x in a.source.split('/')[1:]])
-        a.href = a.source
+        a.href = a.source.replace(',', '/')
+        a.target = os.path.join(self.outputDir, a.href)
+        a.top = ''.join(['../' for x in a.href.split('/')[1:]])
 
     def makeContext(self, asset):
         return Context(page = asset, gauz = self.gauz, ord = self.ord,

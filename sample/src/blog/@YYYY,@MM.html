@@ -6,9 +6,10 @@
 
   <py:match path="content">
     <div class="post">
-      <h1 class="title">Archive of March 2010</h1>
+      <h1 class="title">Archive of
+        ${date(page.yyyy, page.mm, 1).strftime("%B %Y")}</h1>
       <ul>
-        <li py:for="p in gauz.filter(posts, year=2010, month=3)">
+        <li py:for="p in gauz.filter(posts, year=page.yyyy, month=page.mm)">
           <a href="${page.top}${p.href}">${p.date} ${p.title}</a>
         </li>
       </ul>
