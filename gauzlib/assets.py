@@ -79,7 +79,11 @@ class TextAsset(AssetBase):
         outf.close()
 
 class LinkAsset(AssetBase):
-    pass
+    def generate(self):
+        if not os.path.exists(self.target):
+            self.maybeMakeParentDir(self.target)
+            self.config.log.action('LINK', self.target)
+            os.link(self.source, self.target)
 
 class CompositeAsset(AssetBase):
     # has one source but many targets
