@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from genshi.core import Stream
+from genshi.builder import tag
+from genshi.core import Stream, Markup
+import random
 
 class GauzUtils:
 
@@ -25,34 +27,49 @@ class GauzUtils:
                 (not ids or a.source in ids)):
                 yield a
 
-    def obfuscate(self, email, mailto=True):
-        import random
-        email = email.replace('@', ' ') # sub space for at sign
-        # Split the alphabet randomly into two parts.
-        alpha = [c for c in 'abcdefghijklmnopqrstuvwxyz1234567890']
-        random.shuffle(alpha)
+    def jsQuote(self, frag, subst):
+        r = str(frag).replace('"', '\\"')
+        r = r.replace('%s', '"+'+subst+'+"')
+        return '"'+r+'"'
+
+    def randomlyPartition(self, chars='abcdefghijklmnopqrstuvwxyz1234567890'):
+        alpha = [c for c in chars] # must be a list
+        random.shuffle(alpha)      # for shuffle to work
         mid = len(alpha)/2
-        valid = alpha[:mid]
-        ignore = alpha[mid:]
-        # Now we randomly choose whether to output a character of the
-        # email address (preceded by a random member of valid) or a
-        # totally random character (preceded by member of ignore).
-        ls = []
-        i = 0
-        while i < len(email):
-            if random.randint(0,1): # flip a coin
-                ls.append(random.choice(valid))
-                ls.append(email[i])
+        one = alpha[:mid]
+        two = alpha[mid:]
+        return ''.join(one), ''.join(two)
+
+    def buildObfuscatedString(self, text, valid, ignore):
+        either = valid + ignore
+        buf = []
+        i = 0;
+        while i < len(text):
+            if random.randint(0,2): # .33 probability of ignore block
+                buf.append(random.choice(valid))
+                buf.append(text[i])
                 i += 1
             else:
-                ls.append(random.choice(ignore))
-                ls.append(random.choice(alpha))
-        # Finally, output the javascript to decode it
-        return ('''<script type="text/javascript">
-var cl_obfu = "%s".replace(/([%s](.)|[%s].)/ig, "$2").replace(/ /, "@");
-document.write(%s);
-</script><noscript>%s</noscript>''' %
-                (''.join(ls), ''.join(valid), ''.join(ignore),
-                 '"<a href=\'mailto:"+cl_obfu+"\'>"+cl_obfu+"</a>"'
-                 if mailto else 'cl_obfu',
-                 email.replace(' ', u' § ').replace('.', u' • ')))
+                buf.append(random.choice(ignore))
+                buf.append(random.choice(either))
+        return ''.join(buf)
+
+    def obfuscate(self, clearText,
+                  format='<a href="mailto:%s">%s</a>',
+                  noscript='%s',
+                  at = u' § ', dot = u' · '):
+        humanText = clearText.replace('@', at).replace('.', dot)
+        valid, ignore = self.randomlyPartition()
+        obfuText = self.buildObfuscatedString(humanText, valid, ignore)
+        expr = '"' + obfuText + '"'
+        expr += '.replace(/([%s](.)|[%s].)/ig,"$2")' % (valid, ignore)
+        expr += '.replace(/%s/g, "@")' % at
+        expr += '.replace(/%s/g, ".")' % dot
+        var = 's%06x' % random.randrange(0x1000000)
+        format = self.jsQuote(format, var)
+        t = tag(tag.script('var ', var, ' = ', expr, ';\n',
+                           'document.write(', Markup(format), ');\n',
+                           type='text/javascript'))
+        if noscript:
+            t = t(tag.noscript(noscript.replace('%s', humanText)))
+        return t
