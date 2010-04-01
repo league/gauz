@@ -30,7 +30,7 @@ class Config(object):
     xpContent = 'py:match[@path="post"]'
     xpDate = 'meta[@name="date"]/@content'
     xpTags = 'meta[@name="keywords"]/@content'
-    xpTitle = 'title/text()'
+    xpTitle = 'head/title/text()'
 
     log = SimpleLogger()
     gauz = GauzUtils()
