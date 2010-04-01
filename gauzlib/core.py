@@ -3,7 +3,7 @@ import os
 import traceback
 
 class Workload:
-    def __init__(self, config, root):
+    def __init__(self, config, root='.'):
         self.config = config
         self.root = root
         self.fileMap = {}       # relative, normalized file path -> asset
@@ -78,10 +78,9 @@ class Workload:
                         self.fileMap[f].visited = True
 
 
-def main(CF = Config):
-    cf = CF('../www', ['../include'])
-    wl = Workload(cf, '.')
-    while 1:
+def main(cf):
+    wl = Workload(cf)
+    while cf.watch:
         try:
             cf.wait()
             wl.update()

@@ -3,6 +3,7 @@ from gauzlib.load import DependencyTracker
 from gauzlib.log import SimpleLogger
 from gauzlib.util import GauzUtils
 from genshi.template.base import Context
+from optparse import OptionParser
 from time import sleep
 import datetime
 import re
@@ -38,9 +39,31 @@ class Config(object):
     namespaces = {'py': 'http://genshi.edgewall.org/',
                   'xi': 'http://www.w3.org/2001/XInclude'}
 
-    def __init__(self, outputDir, includeDirs):
-        self.outputDir = outputDir
-        self.loader = DependencyTracker(includeDirs)
+    root = '.'
+    outputDir = '_site'
+    includeDirs = []
+    watch = False
+
+    def __init__(self):
+        p = OptionParser()
+        self.addOptions(p)
+        _, args = p.parse_args(values=self)
+        os.chdir(self.root)
+        self.loader = DependencyTracker(self.includeDirs)
+
+    def ensure_value(self, attr, value):
+        setattr(self, attr, value)
+        return value
+
+    def addOptions(self, p):
+        p.add_option('-C', '--directory', dest='root', metavar='DIR',
+                     help='Change to DIR before doing anything.')
+        p.add_option('-I', '--include', dest='includeDirs', metavar='DIR',
+                     help='Append DIR to include path.', action='append')
+        p.add_option('-o', '--output', dest='outputDir', metavar='DIR',
+                     help='Write output files to DIR.')
+        p.add_option('-w', '--watch', dest='watch', action='store_true',
+                     help='Watch for changes in source files.')
 
     def pruneDirs(self, parent, dirs):
         for d in reversed(dirs): # backwards so we can safely remove
