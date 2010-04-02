@@ -16,7 +16,8 @@ class Workload:
                     self.fileMap[f] = a
         config.summarize(self.fileMap)
         for a in self.fileMap.itervalues():
-            a.generate()
+            if config.matchesFilter(a.target):
+                a.generate()
 
     def update(self):
         self.checkForUpdates()
@@ -30,7 +31,7 @@ class Workload:
         self.checkIncludes()
         if self.metaChanged:
             for a in self.fileMap.itervalues():
-                if not a.visited:
+                if not a.visited and self.config.matchesFilter(a.target):
                     a.generate()
 
     def checkForUpdates(self):

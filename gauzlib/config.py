@@ -53,6 +53,7 @@ class Config(object):
         _, args = p.parse_args(values=self)
         os.chdir(self.root)
         self.loader = DependencyTracker(self.includeDirs)
+        self.filters = [re.compile(a) for a in args]
 
     def ensure_value(self, attr, value):
         setattr(self, attr, value)
@@ -157,6 +158,14 @@ class Config(object):
         self.ord = {'tags': sorted(self.by_tag.keys()),
                     'years': sorted(self.by_year.keys(), reverse=True),
                     'months': sorted(self.by_month.keys(), reverse=True)}
+
+    def matchesFilter(self, name):
+        if [] == self.filters:
+            return True
+        for f in self.filters:
+            if f.search(name):
+                return True
+        return False
 
     def isPost(self, asset):
         return bool(asset.date)
