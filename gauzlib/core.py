@@ -79,6 +79,7 @@ class Workload:
 
 
 def main(cf):
+    cf.setup()
     wl = Workload(cf)
     while cf.watch:
         try:

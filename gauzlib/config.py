@@ -21,7 +21,7 @@ def doubly_link(ls):
 
 class Config(object):
     reIgnoreDir = re.compile(r'^[_\.]')
-    reIgnoreFile = re.compile(r'(^|/)(_|\.#|#)|~$')
+    reIgnoreFile = re.compile(r'(^|/)(_|\.|\.#|#)|~$')
     reIso8601 = re.compile(r'(\d{4})[-/\.](\d{2})[-/\.](\d{2})')
     reMarkupFile = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
     reTagSep = re.compile(r'[,;:\s]\s*')
@@ -45,6 +45,9 @@ class Config(object):
     watch = False
 
     def __init__(self):
+        pass
+
+    def setup(self):
         p = OptionParser()
         self.addOptions(p)
         _, args = p.parse_args(values=self)
