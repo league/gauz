@@ -19,7 +19,7 @@ def replace_phodb(s):
     for m in re.finditer('\[phodb\[(\w+)\](\[\w*\])?([^\]]*)\]', s):
         buf += s[k:m.start()]
         pad = '00'+m.group(1)
-        buf += ('<div class="inlinephoto">'
+        buf += ('<div class="frame_240_3 right unlink">'
                 '<a href="http://contrapunctus.net/photo/show/%s%s"><img alt=""'
                 ' src="http://contrapunctus.net/pix/phodb/%c/%c/%s.1.jpg" />'
                 '</a>' %
@@ -37,6 +37,10 @@ def replace_phodb(s):
         k = m.end()
     buf += s[k:]
     return buf
+
+
+def replace_inlinephoto(s):
+    return s.replace('inlinephoto', 'frame_240_3 right unlink')
 
 def trivial(s):
     return s == '' or s.isspace()
@@ -91,9 +95,11 @@ def header_demote(stream):
 
 def markup_fixes(s):
 #    print "BEFORE: ", s
-    return HTML(s).filter(header_demote, paragraph_filter).render()
+    # header_demote
+    return HTML(s).filter(paragraph_filter).render()
 
 content_transforms = [replace_entities, strip_ctrl_m, replace_phodb,
+                      replace_inlinephoto,
                       markup_fixes]
 title_transforms = [replace_entities]
 
@@ -141,15 +147,15 @@ def format_content(post):
 def post_as_html(post):
     return """
 <html xmlns:xi="http://www.w3.org/2001/XInclude"
-      xmlns:py="http://genshi.edgewall.org/"
-      py:strip="">
-  <py:def function="page_title">%s</py:def>
-  <py:def function="page_tags">%s</py:def>
-  <xi:include href="blog-post.html" />
-  <div class="post" py:match="post">
-%s
-  </div>
-  <xi:include href="layout.html" />
+      xmlns:py="http://genshi.edgewall.org/">
+  <xi:include href="post.html" />
+  <head>
+    <title py:replace="None">%s</title>
+    <meta name="keywords" content="%s" />
+  </head>
+  <body>
+    %s
+  </body>
 </html>""" % (post['title'],
               format_tags(post),
               format_content(post))
