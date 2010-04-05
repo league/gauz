@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from genshi.builder import tag
 from genshi.core import Stream, Markup
+from genshi.template import NewTextTemplate
 import random
 
 class GauzUtils:
-
-    def hello(self):
-        return 'HeLlO!'
 
     def markupToString(self, value):
         if hasattr(value, '__call__'):
@@ -26,6 +24,36 @@ class GauzUtils:
                 (not tag or tag in a.tags) and
                 (not ids or a.source in ids)):
                 yield a
+
+    def monthly(self, assets):
+        first = True
+        cur = None
+        for a in assets:
+            if cur != a.date.month:
+                br = tag.a(name = a.date.strftime('%m'))
+                if not first:
+                    br = tag(br, tag.div(class_ = 'archive-break'))
+                yield br
+                cur = a.date.month
+            yield a
+            first = False
+
+    def yearly(self, assets):
+        first = True
+        cur = None
+        for a in assets:
+            if cur != a.date.year:
+                br = tag.a(name = str(a.date.year))
+                if not first:
+                    br = tag(br, tag.div(class_ = 'archive-break'))
+                yield br
+                cur = a.date.year
+            yield a
+            first = False
+
+    def expandText(self, text, page):
+        tmpl = NewTextTemplate(text)
+        return tmpl.generate(page.config.makeContext(page))
 
     def jsQuote(self, frag, subst):
         r = str(frag).replace('"', '\\"')

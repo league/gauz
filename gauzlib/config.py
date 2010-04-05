@@ -28,7 +28,7 @@ class Config(object):
     reTextFile = re.compile(r'\.css$')
     reWebPage = re.compile(r'\.(html|xhtml|htm)$')
 
-    xpContent = 'py:match[@path="post"]'
+    xpContent = 'body/*'
     xpDate = 'meta[@name="date"]/@content'
     xpTags = 'meta[@name="keywords"]/@content'
     xpTitle = 'head/title/text()'
@@ -36,6 +36,7 @@ class Config(object):
     log = SimpleLogger()
     gauz = GauzUtils()
     waitIntervalSec = 2
+    halfLifeInDays = 1000
     namespaces = {'py': 'http://genshi.edgewall.org/',
                   'xi': 'http://www.w3.org/2001/XInclude'}
 
@@ -95,6 +96,7 @@ class Config(object):
     def makeContext(self, asset):
         return Context(page = asset, gauz = self.gauz, ord = self.ord,
                        posts = self.posts, pages = self.pages,
+                       cloud = self.cloud,
                        by = {'year': self.by_year,
                              'month': self.by_month,
                              'tag': self.by_tag})
@@ -151,12 +153,13 @@ class Config(object):
                 if t not in self.by_tag:
                     self.by_tag[t] = set()
                 self.by_tag[t].add(a.source)
+        self.cloud = self.makeCloud(self.posts, self.halfLifeInDays)
         self.posts.sort(key = lambda p: p.date, reverse=True)
         self.pages.sort(key = lambda p: p.title or p.source)
         doubly_link(self.posts)
         doubly_link(self.pages)
         self.ord = {'tags': sorted(self.by_tag.keys()),
-                    'years': sorted(self.by_year.keys(), reverse=True),
+                    'years': sorted(self.by_year.keys()),
                     'months': sorted(self.by_month.keys(), reverse=True)}
 
     def matchesFilter(self, name):
@@ -172,3 +175,32 @@ class Config(object):
 
     def isPage(self, asset):
         return self.reWebPage.search(asset.source)
+
+    def makeCloud(self, posts, halfLife=None):
+        cloud = {}
+        today = datetime.date.today()
+        for p in posts:
+            if halfLife:
+                age = today - p.date
+                score = 1.0 / pow(2, float(age.days) / halfLife)
+            else:
+                score = 1
+            for t in p.tags:
+                if t not in cloud:
+                    cloud[t] = score
+                else:
+                    cloud[t] += score
+        self.normalizeCloudScores(cloud)
+        return cloud
+
+    def normalizeCloudScores(self, cloud):
+        hi = None
+        lo = None
+        for v in cloud.itervalues():
+            if not hi or v > hi:
+                hi = v
+            if not lo or v < lo:
+                lo = v
+        diff = (hi - lo) + 0.001
+        for t in cloud.iterkeys():
+            cloud[t] = (cloud[t]-lo)/diff

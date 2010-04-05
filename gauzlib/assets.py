@@ -99,33 +99,35 @@ class CompositeAsset(AssetBase):
 
     def generate(self):
         self.copy = copy.copy(self.orig)
-        self.expandTags(self.orig.href)
+        self.expandTags(self.orig.source)
 
-    def expandTags(self, href):
-        if href.find('@TAG') >= 0:
+    def expandTags(self, source):
+        if source.find('@TAG') >= 0:
             for t in self.config.ord['tags']:
                 self.copy.tag = t
-                self.expandDates(href.replace('@TAG', t))
+                self.expandDates(source.replace('@TAG', t))
         else:
-            self.expandDates(href)
+            self.expandDates(source)
 
-    def expandDates(self, href):
-        if href.find('@MM') >= 0: # assumes MM also uses YYYY
+    def expandDates(self, source):
+        if source.find('@MM') >= 0: # assumes MM also uses YYYY
             for y,m in self.config.ord['months']:
                 self.copy.yyyy = y
                 self.copy.mm = m
                 yy = str(y)
                 mm = '%02d' % m
-                h = href.replace('@YYYY', yy).replace('@MM', mm)
+                h = source.replace('@YYYY', yy).replace('@MM', mm)
                 self.genInstance(h)
-        elif href.find('@YYYY') >= 0:
+        elif source.find('@YYYY') >= 0:
             for y in self.config.ord['years']:
-                self.copy.var['yyyy'] = y
-                self.genInstance(href.replace('@YYYY', y))
+                self.copy.yyyy = y
+                yy = str(y)
+                self.genInstance(source.replace('@YYYY', yy))
         else:
-            self.genInstance(href)
+            self.genInstance(source)
 
-    def genInstance(self, href):
-        self.copy.href = href
-        self.copy.target = os.path.join(self.config.outputDir, href)
+    def genInstance(self, source):
+        self.copy.source = source # virtual source; file won't exist
+        self.config.finalizeAsset(self.copy)
+        self.copy.source = self.source # restore actual source
         self.copy.generate()
