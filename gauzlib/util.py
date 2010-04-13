@@ -2,6 +2,7 @@
 from genshi.builder import tag
 from genshi.core import Stream, Markup
 from genshi.template import NewTextTemplate
+from pygments.formatters import HtmlFormatter
 import random
 
 class GauzUtils:
@@ -101,3 +102,6 @@ class GauzUtils:
         if noscript:
             t = t(tag.noscript(noscript.replace('%s', humanText)))
         return t
+
+    def pygmentStyleDefs(self, selector):
+        return HtmlFormatter().get_style_defs(selector)
