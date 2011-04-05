@@ -28,10 +28,10 @@ class Config(object):
     reTextFile = re.compile(r'\.css$')
     reWebPage = re.compile(r'\.(html|xhtml|htm)$')
 
-    xpContent = 'body/*'
-    xpDate = 'meta[@name="date"]/@content'
-    xpTags = 'meta[@name="keywords"]/@content'
-    xpTitle = 'head/title/text()'
+    xpContent = '//body/*'
+    xpDate = '//meta[@name="date"]/@content'
+    xpTags = '//meta[@name="keywords"]/@content'
+    xpTitle = '//head/title/text()'
 
     log = SimpleLogger()
     gauz = GauzUtils()
