@@ -64,7 +64,8 @@ class MarkupAsset(AssetBase):
         outf = open(self.target, 'w')
         stream = tmpl.generate(self.config.makeContext(self))
         docty = 'html' if self.target.endswith('html') else None
-        print >>outf, stream.render('xhtml', doctype=docty)
+        print >>outf, stream.render('xhtml', doctype=docty,
+                                    strip_whitespace=False)
         outf.close()
 
 
