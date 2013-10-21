@@ -37,7 +37,7 @@ class MarkupAsset(AssetBase):
         self.mtime = os.path.getmtime(self.source)
         self.config.log.action('READ', self.source)
         inf = open(self.source)
-        buf = inf.read()
+        buf = unicode(inf.read(), 'utf-8')
         inf.close()
         self.storeXML(buf)
         self.changed = False
@@ -90,15 +90,15 @@ class MarkdownAsset(MarkupAsset):
         for inc in self.config.includeDirs:
             try:
                 inf = open(os.path.join(inc, tmplName))
-                tmpl = inf.read()
+                tmpl = unicode(inf.read(), 'utf-8')
                 inf.close()
                 break
             except IOError:
                 pass
         if not tmpl:
             raise IOError('could not find template: ' + tmplName)
-        self.xml = XML(tmpl.replace('$title$',title).replace('$tags$',tags).
-                       replace('$body$',html))
+        self.xml = XML(tmpl.replace(u'$title$',title).replace(u'$tags$',tags).
+                       replace(u'$body$',html))
 
 class TextAsset(AssetBase):
     def generate(self):
