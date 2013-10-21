@@ -26,7 +26,7 @@ class Config(object):
     reMarkupFile = re.compile(r'\.(xml|html|xhtml|htm|rss)$')
     reTagSep = re.compile(r'[,;:\s]\s*')
     reTextFile = re.compile(r'\.css$')
-    reWebPage = re.compile(r'\.(html|xhtml|htm)$')
+    reWebPage = re.compile(r'\.(html|xhtml|htm|md)$')
 
     xpContent = '//body/*'
     xpDate = '//meta[@name="date"]/@content'
@@ -80,6 +80,8 @@ class Config(object):
             return None
         if self.reMarkupFile.search(pathname):
             a = MarkupAsset(pathname, self)
+        elif pathname.endswith('.md'):
+            a = MarkdownAsset(pathname, self)
         elif self.reTextFile.search(pathname):
             a = TextAsset(pathname, self)
         else:

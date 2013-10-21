@@ -2,6 +2,7 @@ from genshi.input import XML
 from genshi.template import NewTextTemplate
 import copy
 import os
+import markdown
 
 class AssetBase(object):
     def __init__(self, filename, config):
@@ -38,13 +39,16 @@ class MarkupAsset(AssetBase):
         inf = open(self.source)
         buf = inf.read()
         inf.close()
-        self.xml = XML(buf)
+        self.storeXML(buf)
         self.changed = False
         self.noticeChange('title', self.config.extractTitle(self))
         self.noticeChange('tags', self.config.extractTags(self))
         self.noticeChange('date', self.config.extractDate(self))
         self.content = self.config.extractContent(self)
         return self.changed
+
+    def storeXML(self, buf):
+        self.xml = XML(buf)
 
     def noticeChange(self, attr, value):
         try:
@@ -68,6 +72,33 @@ class MarkupAsset(AssetBase):
                                     strip_whitespace=False)
         outf.close()
 
+class MarkdownAsset(MarkupAsset):
+    def storeXML(self, buf):
+        # First two lines contain title, tags
+        k1 = buf.find('\n')
+        k2 = buf.find('\n', k1+1)
+        assert buf[0] == '%'
+        title = buf[1:k1]
+        assert buf[k1+1] == '%'
+        tags = buf[k1+2:k2]
+        # Remove first two lines
+        buf = buf[k2+1:]
+        html = markdown.markdown(buf, extensions=['fenced_code', 'codehilite'])
+        # Find template file to dump markdown data into
+        tmplName = 'markdown.html'
+        tmpl = None
+        for inc in self.config.includeDirs:
+            try:
+                inf = open(os.path.join(inc, tmplName))
+                tmpl = inf.read()
+                inf.close()
+                break
+            except IOError:
+                pass
+        if not tmpl:
+            raise IOError('could not find template: ' + tmplName)
+        self.xml = XML(tmpl.replace('$title$',title).replace('$tags$',tags).
+                       replace('$body$',html))
 
 class TextAsset(AssetBase):
     def generate(self):
